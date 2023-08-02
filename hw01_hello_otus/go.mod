@@ -1,4 +1,4 @@
-module github.com/arkareth/otus-hw-go
+module github.com/arkareth/otus-hw-go/hw01_hello_otus
 
 go 1.19
 
