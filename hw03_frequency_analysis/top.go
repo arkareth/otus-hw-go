@@ -11,7 +11,8 @@ type wordCount struct {
 	count int
 }
 
-var wr = regexp.MustCompile("[\\p{L}\\d]+")
+var wr = regexp.MustCompile(`[\p{L}\d]+`)
+
 var pm = ",.!?-:;'\" /\\()[]{}<>"
 
 func Top10(s string) []string {
