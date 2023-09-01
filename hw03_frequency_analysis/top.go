@@ -20,21 +20,17 @@ func Top10(s string) []string {
 		return nil
 	}
 
-	ws := strings.Split(s, " ")
-
+	f := strings.Fields(s)
 	m := make(map[string]int)
-	for _, v := range ws {
-		f := strings.Fields(v)
-		for _, i := range f {
-			if wr.MatchString(i) {
-				c := strings.ToLower(strings.Trim(i, pm))
-				m[c]++
-				continue
-			}
-			if len(i) > 1 {
-				m[i]++
-				continue
-			}
+	for _, i := range f {
+		if wr.MatchString(i) {
+			c := strings.ToLower(strings.Trim(i, pm))
+			m[c]++
+			continue
+		}
+		if len(i) > 1 {
+			m[i]++
+			continue
 		}
 	}
 
