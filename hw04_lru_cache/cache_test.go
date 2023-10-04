@@ -50,13 +50,63 @@ func TestCache(t *testing.T) {
 	})
 
 	t.Run("purge logic", func(t *testing.T) {
-		// Write me
+		i := map[string]int{
+			"aaa": 100,
+			"bbb": 200,
+			"ccc": 300,
+		}
+		c := NewCache(3)
+		for k, v := range i {
+			c.Set(Key(k), v)
+		}
+		for k := range i {
+			_, ok := c.Get(Key(k))
+			require.True(t, ok)
+		}
+
+		c.Clear()
+
+		for k := range i {
+			_, ok := c.Get(Key(k))
+			require.False(t, ok)
+		}
+	})
+
+	t.Run("push out logic", func(t *testing.T) {
+		c := NewCache(3)
+
+		c.Set("aaa", 100) // last
+		c.Set("bbb", 200) // middle
+		c.Set("ccc", 300) // first
+
+		c.Set(Key("ddd"), 400) // ddd->first
+
+		_, ok := c.Get("aaa") // should be pushed out
+		require.False(t, ok)
+	})
+
+	t.Run("least recently used", func(t *testing.T) {
+		c := NewCache(3)
+
+		c.Set("aaa", 100) // last
+		c.Set("bbb", 200) // middle
+		c.Set("ccc", 300) // first
+
+		c.Set("bbb", 500) // bbb->first
+		c.Set("aaa", 600) // aaa->first
+
+		c.Get("aaa") // aaa->first
+		c.Get("bbb") // bbb->first
+		c.Get("aaa") // aaa->first
+
+		c.Set("ddd", 400) // ddd->first
+
+		_, ok := c.Get("ccc") // should be pushed out
+		require.False(t, ok)
 	})
 }
 
 func TestCacheMultithreading(t *testing.T) {
-	t.Skip() // Remove me if task with asterisk completed.
-
 	c := NewCache(10)
 	wg := &sync.WaitGroup{}
 	wg.Add(2)
