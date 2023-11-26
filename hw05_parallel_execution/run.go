@@ -5,9 +5,11 @@ import (
 	"sync"
 )
 
-var ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
-var ErrNoTasksSupplied = errors.New("no tasks supplied for processing")
-var ErrZeroWorkersCount = errors.New("supplied workers counter is zero")
+var (
+	ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
+	ErrNoTasksSupplied     = errors.New("no tasks supplied for processing")
+	ErrZeroWorkersCount    = errors.New("supplied workers counter is zero")
+)
 
 type Task func() error
 
