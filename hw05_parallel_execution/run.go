@@ -18,7 +18,7 @@ func Run(tasks []Task, n, m int) error {
 	if n == 0 {
 		return ErrZeroWorkersCount
 	}
-	queue := make(chan Task, len(tasks))
+	queue := make(chan Task)
 	done := make(chan struct{})
 
 	go toQueue(done, tasks, queue)
