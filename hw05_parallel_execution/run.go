@@ -26,7 +26,7 @@ func Run(tasks []Task, n, m int) error {
 	// Wait until all remaining goroutines finish to mitigate race conditions
 	defer func() {
 		for range out {
-
+			continue
 		}
 	}()
 
@@ -39,7 +39,7 @@ func Run(tasks []Task, n, m int) error {
 		case <-done:
 			return nil
 		default:
-			if skiperrors == true {
+			if skiperrors {
 				continue
 			}
 			if o != nil {
