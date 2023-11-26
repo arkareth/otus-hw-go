@@ -20,10 +20,14 @@ func Run(tasks []Task, n, m int) error {
 	if n == 0 {
 		return ErrZeroWorkersCount
 	}
-	queue := make(chan Task)
 	done := make(chan struct{})
 
-	go toQueue(done, tasks, queue)
+	queue := make(chan Task, len(tasks))
+	for _, t := range tasks {
+		queue <- t
+	}
+	close(queue)
+
 	out := merge(queue, n, done)
 	// Wait until all remaining goroutines finish to mitigate race conditions
 	defer func() {
@@ -55,18 +59,6 @@ func Run(tasks []Task, n, m int) error {
 	}
 
 	return nil
-}
-
-func toQueue(done <-chan struct{}, tasks []Task, queue chan<- Task) {
-	defer close(queue)
-	for _, t := range tasks {
-		select {
-		case <-done:
-			return
-		default:
-			queue <- t
-		}
-	}
 }
 
 func worker(queue <-chan Task, done <-chan struct{}, out chan<- error, wg *sync.WaitGroup) {
