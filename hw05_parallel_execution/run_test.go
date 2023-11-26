@@ -136,7 +136,7 @@ func TestRun(t *testing.T) {
 	})
 
 	t.Run("abort if zero workers count supplied", func(t *testing.T) {
-		tasks := make([]Task, 1)
+		tasks := make([]Task, 0)
 		tasks = append(tasks, func() error {
 			return nil
 		})
